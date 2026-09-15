@@ -2,6 +2,7 @@ package com.interway.inventory.service;
 
 import com.interway.inventory.dto.ProductRequest;
 import com.interway.inventory.dto.ProductResponse;
+import com.interway.inventory.exception.ProductNotFoundException;
 import com.interway.inventory.model.Product;
 import com.interway.inventory.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductResponse findById(Long id){
-        Product product = repository.findById(id).orElseThrow(() -> new RuntimeException("Product not found: " + id));
+        Product product = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         return toResponse(product);
     }
 
@@ -36,14 +37,14 @@ public class ProductService {
     }
 
     public ProductResponse update(Long id, ProductRequest request){
-        Product product = repository.findById(id).orElseThrow(() -> new RuntimeException("Product not found: " + id));
+        Product product = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         applyRequest(product, request);
         return toResponse(repository.save(product));
     }
 
     public void delete(Long id){
         if(!repository.existsById(id)){
-            throw new RuntimeException("Product not found " + id);
+            throw new ProductNotFoundException(id);
         }
         repository.deleteById(id);
     }
