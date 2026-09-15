@@ -5,9 +5,12 @@ import com.interway.inventory.dto.ProductResponse;
 import com.interway.inventory.exception.ProductNotFoundException;
 import com.interway.inventory.model.Product;
 import com.interway.inventory.repository.ProductRepository;
+import com.interway.inventory.repository.ProductSpecifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -20,8 +23,23 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAll() {
-        return repository.findAll().stream().map(this::toResponse).toList();
+    public List<ProductResponse> findAll(String search, String category, BigDecimal minPrice, BigDecimal maxPrice) {
+        Specification<Product> spec = Specification.unrestricted();
+
+        if (search != null && !search.isBlank()) {
+            spec = spec.and(ProductSpecifications.nameContains(search));
+        }
+        if (category != null && !category.isBlank()) {
+            spec = spec.and(ProductSpecifications.categoryEquals(category));
+        }
+        if (minPrice != null) {
+            spec = spec.and(ProductSpecifications.priceAtLeast(minPrice));
+        }
+        if (maxPrice != null) {
+            spec = spec.and(ProductSpecifications.priceAtMost(maxPrice));
+        }
+
+        return repository.findAll(spec).stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
