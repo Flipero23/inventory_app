@@ -6,9 +6,12 @@ import com.interway.inventory.exception.ProductNotFoundException;
 import com.interway.inventory.model.Product;
 import com.interway.inventory.repository.ProductRepository;
 import com.interway.inventory.repository.ProductSpecifications;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +26,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> findAll(String search, String category, BigDecimal minPrice, BigDecimal maxPrice) {
+    public Page<ProductResponse> findAll(String search, String category,
+                                         BigDecimal minPrice, BigDecimal maxPrice,
+                                         Pageable pageable) {
         Specification<Product> spec = Specification.unrestricted();
 
         if (search != null && !search.isBlank()) {
@@ -39,7 +44,7 @@ public class ProductService {
             spec = spec.and(ProductSpecifications.priceAtMost(maxPrice));
         }
 
-        return repository.findAll(spec).stream().map(this::toResponse).toList();
+        return repository.findAll(spec, pageable).map(this::toResponse);
     }
 
     @Transactional(readOnly = true)

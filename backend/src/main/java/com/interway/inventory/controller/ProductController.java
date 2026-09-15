@@ -4,6 +4,9 @@ import com.interway.inventory.dto.ProductRequest;
 import com.interway.inventory.dto.ProductResponse;
 import com.interway.inventory.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +24,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductResponse> getAll(
+    public Page<ProductResponse> getAll(
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice) {
-        return service.findAll(search, category, minPrice, maxPrice);
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        return service.findAll(search, category, minPrice, maxPrice, pageable);
     }
 
     @GetMapping("/{id}")
