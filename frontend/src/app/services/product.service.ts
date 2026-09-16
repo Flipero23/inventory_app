@@ -1,0 +1,39 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Product, Page } from '../models/product.model';
+
+@Injectable({ providedIn: 'root' })
+export class ProductService {
+
+  private readonly baseUrl = 'http://localhost:8080/products';
+
+  constructor(private http: HttpClient) {}
+
+  getAll(search?: string, category?: string, page = 0, size = 10): Observable<Page<Product>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (search) params = params.set('search', search);
+    if (category) params = params.set('category', category);
+
+    return this.http.get<Page<Product>>(this.baseUrl, { params });
+  }
+
+  getById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/${id}`);
+  }
+
+  create(product: Product): Observable<Product> {
+    return this.http.post<Product>(this.baseUrl, product);
+  }
+
+  update(id: number, product: Product): Observable<Product> {
+    return this.http.put<Product>(`${this.baseUrl}/${id}`, product);
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+}
