@@ -40,7 +40,7 @@ export class ProductList implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage.set('Неуспешно прочитани производи.');
+        this.errorMessage.set('Неуспешно вчитани производи.');
         this.isLoading.set(false);
       }
     });
