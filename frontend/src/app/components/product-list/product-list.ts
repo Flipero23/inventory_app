@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, merge } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -43,6 +43,9 @@ export class ProductList implements OnInit {
   pageSize = signal(10);
 
   searchControl = new FormControl('');
+  categoryControl = new FormControl('');
+  minPriceControl = new FormControl<number | null>(null);
+  maxPriceControl = new FormControl<number | null>(null);
 
   constructor(
     private productService: ProductService,
@@ -53,7 +56,12 @@ export class ProductList implements OnInit {
   ngOnInit(): void {
     this.loadProducts();
 
-    this.searchControl.valueChanges
+    merge(
+      this.searchControl.valueChanges,
+      this.categoryControl.valueChanges,
+      this.minPriceControl.valueChanges,
+      this.maxPriceControl.valueChanges,
+    )
       .pipe(debounceTime(400), distinctUntilChanged())
       .subscribe(() => {
         this.pageIndex.set(0);
@@ -66,18 +74,23 @@ export class ProductList implements OnInit {
     this.errorMessage.set('');
 
     const search = this.searchControl.value ?? undefined;
+    const category = this.categoryControl.value ?? undefined;
+    const minPrice = this.minPriceControl.value ?? undefined;
+    const maxPrice = this.maxPriceControl.value ?? undefined;
 
-    this.productService.getAll(search, undefined, this.pageIndex(), this.pageSize()).subscribe({
-      next: (response) => {
-        this.products.set(response.content);
-        this.totalElements.set(response.page.totalElements);
-        this.isLoading.set(false);
-      },
-      error: () => {
-        this.errorMessage.set('Неуспешно вчитани производи.');
-        this.isLoading.set(false);
-      },
-    });
+    this.productService
+      .getAll(search, category, minPrice, maxPrice, this.pageIndex(), this.pageSize())
+      .subscribe({
+        next: (response) => {
+          this.products.set(response.content);
+          this.totalElements.set(response.page.totalElements);
+          this.isLoading.set(false);
+        },
+        error: () => {
+          this.errorMessage.set('Неуспешно вчитани производи.');
+          this.isLoading.set(false);
+        },
+      });
   }
 
   onPageChange(event: PageEvent): void {

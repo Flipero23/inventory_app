@@ -4,10 +4,27 @@
     <a mat-flat-button color="primary" routerLink="/products/new">+ Нов производ</a>
   </div>
 
-  <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Пребарај по име</mat-label>
-    <input matInput [formControl]="searchControl" />
-  </mat-form-field>
+  <div class="filters">
+    <mat-form-field appearance="outline">
+      <mat-label>Пребарај по име</mat-label>
+      <input matInput [formControl]="searchControl" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Категорија</mat-label>
+      <input matInput [formControl]="categoryControl" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Цена од</mat-label>
+      <input matInput type="number" [formControl]="minPriceControl" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Цена до</mat-label>
+      <input matInput type="number" [formControl]="maxPriceControl" />
+    </mat-form-field>
+  </div>
 
   @if (isLoading()) {
     <div class="spinner-wrapper">

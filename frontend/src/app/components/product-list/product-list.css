@@ -34,7 +34,13 @@
   text-align: center;
 }
 
-.search-field {
-  width: 100%;
-  margin-bottom: 1rem;
+.filters {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filters mat-form-field {
+  flex: 1;
+  min-width: 180px;
 }

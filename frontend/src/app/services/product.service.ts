@@ -5,18 +5,24 @@ import { Product, Page } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-
   private readonly baseUrl = 'http://localhost:8080/products';
 
   constructor(private http: HttpClient) {}
 
-  getAll(search?: string, category?: string, page = 0, size = 10): Observable<Page<Product>> {
-    let params = new HttpParams()
-      .set('page', page)
-      .set('size', size);
+  getAll(
+    search?: string,
+    category?: string,
+    minPrice?: number,
+    maxPrice?: number,
+    page = 0,
+    size = 10,
+  ): Observable<Page<Product>> {
+    let params = new HttpParams().set('page', page).set('size', size);
 
     if (search) params = params.set('search', search);
     if (category) params = params.set('category', category);
+    if (minPrice != null) params = params.set('minPrice', minPrice);
+    if (maxPrice != null) params = params.set('maxPrice', maxPrice);
 
     return this.http.get<Page<Product>>(this.baseUrl, { params });
   }
