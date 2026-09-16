@@ -23,6 +23,11 @@ public class ProductController {
         this.service = service;
     }
 
+    @GetMapping("/categories")
+    public List<String> getCategories(){
+        return service.findAllCategories();
+    }
+
     @GetMapping
     public Page<ProductResponse> getAll(
             @RequestParam(required = false) String search,

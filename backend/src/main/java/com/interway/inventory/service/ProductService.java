@@ -74,11 +74,15 @@ public class ProductService {
 
     private void applyRequest(Product product, ProductRequest request) {
         product.setName(request.getName());
-        product.setDescription(request.getDescription());
+        product.setDescription(normalize(request.getDescription()));
         product.setPrice(request.getPrice());
         product.setQuantityInStock(request.getQuantityInStock());
-        product.setCategory(request.getCategory());
-        product.setImageUrl(request.getImageUrl());
+        product.setCategory(normalize(request.getCategory()));
+        product.setImageUrl(normalize(request.getImageUrl()));
+    }
+
+    private String normalize(String value) {
+        return (value == null || value.isBlank() ? null : value.trim());
     }
 
     private ProductResponse toResponse(Product product) {
@@ -93,6 +97,11 @@ public class ProductService {
         response.setCreatedAt(product.getCreatedAt());
         response.setUpdatedAt(product.getUpdatedAt());
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> findAllCategories(){
+        return repository.findDistinctCategories();
     }
 
 }
