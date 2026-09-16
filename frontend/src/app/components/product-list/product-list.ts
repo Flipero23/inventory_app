@@ -7,6 +7,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-product-list',
@@ -22,9 +24,11 @@ export class ProductList implements OnInit {
   isLoading = signal(false);
   errorMessage = signal('');
 
-   displayedColumns: string[] = ['name', 'category', 'price', 'quantityInStock', 'actions'];
+  displayedColumns: string[] = ['name', 'category', 'price', 'quantityInStock', 'actions'];
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -43,6 +47,21 @@ export class ProductList implements OnInit {
         this.errorMessage.set('Неуспешно вчитани производи.');
         this.isLoading.set(false);
       }
+    });
+  }
+
+  deleteProduct(product: Product): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      data: { message: `Дали сте сигурни дека сакате да го избришете производот "${product.name}"?` }
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+
+      this.productService.delete(product.id!).subscribe({
+        next: () => this.loadProducts(),
+        error: () => this.errorMessage.set('Бришењето е неуспешно.')
+      });
     });
   }
 }

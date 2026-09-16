@@ -42,6 +42,7 @@
         <td mat-cell *matCellDef="let product">
           <a mat-button [routerLink]="['/products', product.id]">Детали</a>
           <a mat-button [routerLink]="['/products', product.id, 'edit']">Уреди</a>
+          <button mat-button color="warn" (click)="deleteProduct(product)">Избриши</button>  
         </td>
       </ng-container>
 
