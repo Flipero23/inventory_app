@@ -1,0 +1,30 @@
+<div class="container">
+  <a mat-button routerLink="/products">← Назад кон листата</a>
+
+  @if (isLoading()) {
+    <p>Се вчитува...</p>
+  }
+
+  @if (errorMessage()) {
+    <p class="alert-error">{{ errorMessage() }}</p>
+  }
+
+  @if (product(); as p) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ p.name }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Опис:</strong> {{ p.description || '-' }}</p>
+        <p><strong>Цена:</strong> {{ p.price | number:'1.2-2' }} ден.</p>
+        <p><strong>Количина на залиха:</strong> {{ p.quantityInStock }}</p>
+        <p><strong>Категорија:</strong> {{ p.category || '-' }}</p>
+        <p><strong>Креиран:</strong> {{ p.createdAt | date:'dd.MM.yyyy HH:mm' }}</p>
+        <p><strong>Ажуриран:</strong> {{ p.updatedAt | date:'dd.MM.yyyy HH:mm' }}</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-flat-button color="primary" [routerLink]="['/products', p.id, 'edit']">Уреди</a>
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>
