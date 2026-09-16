@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-list',
@@ -27,7 +28,8 @@ export class ProductList implements OnInit {
   displayedColumns: string[] = ['name', 'category', 'price', 'quantityInStock', 'actions'];
 
   constructor(private productService: ProductService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -59,8 +61,13 @@ export class ProductList implements OnInit {
       if (!confirmed) return;
 
       this.productService.delete(product.id!).subscribe({
-        next: () => this.loadProducts(),
-        error: () => this.errorMessage.set('Бришењето е неуспешно.')
+        next: () => {
+          this.snackBar.open('Производот е успешно избришан.', 'Затвори', { duration: 3000 });
+          this.loadProducts();
+        },
+        error: () => {
+          this.snackBar.open('Бришењето не успеа.', 'Затвори', { duration: 5000 });
+        }
       });
     });
   }

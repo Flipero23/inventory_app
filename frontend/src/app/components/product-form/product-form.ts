@@ -6,21 +6,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ProductService } from '../../services/product.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-form',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './product-form.html',
-  styleUrl: './product-form.css'
+  styleUrl: './product-form.css',
 })
 export class ProductForm implements OnInit {
-
   form: FormGroup;
   isEditMode = signal(false);
   isSaving = signal(false);
@@ -31,14 +25,15 @@ export class ProductForm implements OnInit {
     private fb: FormBuilder,
     private productService: ProductService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar,
   ) {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.maxLength(1000)]],
       price: [null, [Validators.required, Validators.min(0)]],
       quantityInStock: [null, [Validators.required, Validators.min(0)]],
-      category: ['', [Validators.maxLength(100)]]
+      category: ['', [Validators.maxLength(100)]],
     });
   }
 
@@ -49,7 +44,7 @@ export class ProductForm implements OnInit {
       this.productId = Number(idParam);
       this.productService.getById(this.productId).subscribe({
         next: (product) => this.form.patchValue(product),
-        error: () => this.errorMessage.set('Неуспешно вчитан производ.')
+        error: () => this.errorMessage.set('Неуспешно вчитан производ.'),
       });
     }
   }
@@ -71,11 +66,20 @@ export class ProductForm implements OnInit {
     }
 
     request.subscribe({
-      next: () => this.router.navigate(['/products']),
+      next: () => {
+        let message;
+        if (this.isEditMode()) {
+          message = 'Производот е успешно ажуриран.';
+        } else {
+          message = 'Производот е успешно креиран.';
+        }
+        this.snackBar.open(message, 'Затвори', { duration: 3000 });
+        this.router.navigate(['/products']);
+      },
       error: () => {
         this.isSaving.set(false);
-        this.errorMessage.set('Зачувувањето не успеа.');
-      }
+        this.snackBar.open('Зачувувањето не успеа.', 'Затвори', { duration: 5000 });
+      },
     });
   }
 
