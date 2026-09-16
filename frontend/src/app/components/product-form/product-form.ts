@@ -10,7 +10,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-product-form',
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule,
+     ReactiveFormsModule,
+      MatFormFieldModule, 
+      MatInputModule, 
+      MatButtonModule
+    ],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css',
 })

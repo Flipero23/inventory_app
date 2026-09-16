@@ -14,6 +14,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-product-list',
@@ -27,6 +28,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatPaginatorModule,
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
@@ -36,6 +38,9 @@ export class ProductList implements OnInit {
   isLoading = signal(false);
   errorMessage = signal('');
   displayedColumns: string[] = ['name', 'category', 'price', 'quantityInStock', 'actions'];
+  totalElements = signal(0);
+  pageIndex = signal(0);
+  pageSize = signal(10);
 
   searchControl = new FormControl('');
 
@@ -50,7 +55,10 @@ export class ProductList implements OnInit {
 
     this.searchControl.valueChanges
       .pipe(debounceTime(400), distinctUntilChanged())
-      .subscribe(() => this.loadProducts());
+      .subscribe(() => {
+        this.pageIndex.set(0);
+        this.loadProducts();
+      });
   }
 
   loadProducts(): void {
@@ -59,9 +67,10 @@ export class ProductList implements OnInit {
 
     const search = this.searchControl.value ?? undefined;
 
-    this.productService.getAll(search).subscribe({
+    this.productService.getAll(search, undefined, this.pageIndex(), this.pageSize()).subscribe({
       next: (response) => {
         this.products.set(response.content);
+        this.totalElements.set(response.page.totalElements);
         this.isLoading.set(false);
       },
       error: () => {
@@ -69,6 +78,12 @@ export class ProductList implements OnInit {
         this.isLoading.set(false);
       },
     });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
+    this.loadProducts();
   }
 
   deleteProduct(product: Product): void {

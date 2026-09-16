@@ -6,7 +6,7 @@
 
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>Пребарај по име</mat-label>
-    <input matInput [formControl]="nameControl" />
+    <input matInput [formControl]="searchControl" />
   </mat-form-field>
 
   @if (isLoading()) {
@@ -53,6 +53,15 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
+
+    <mat-paginator
+      [length]="totalElements()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[5, 10, 25]"
+      (page)="onPageChange($event)"
+    >
+    </mat-paginator>
 
     @if (products().length === 0) {
       <p class="empty-state">Нема пронајдени производи.</p>
