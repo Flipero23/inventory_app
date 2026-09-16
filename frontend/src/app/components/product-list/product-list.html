@@ -4,6 +4,11 @@
     <a mat-flat-button color="primary" routerLink="/products/new">+ Нов производ</a>
   </div>
 
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Пребарај по име</mat-label>
+    <input matInput [formControl]="nameControl" />
+  </mat-form-field>
+
   @if (isLoading()) {
     <div class="spinner-wrapper">
       <mat-spinner diameter="40"></mat-spinner>
@@ -16,7 +21,6 @@
 
   @if (!isLoading() && !errorMessage()) {
     <table mat-table [dataSource]="products()" class="product-table">
-
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Име</th>
         <td mat-cell *matCellDef="let product">{{ product.name }}</td>
@@ -29,7 +33,7 @@
 
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef>Цена</th>
-        <td mat-cell *matCellDef="let product">{{ product.price | number:'1.2-2' }} ден.</td>
+        <td mat-cell *matCellDef="let product">{{ product.price | number: '1.2-2' }} ден.</td>
       </ng-container>
 
       <ng-container matColumnDef="quantityInStock">
@@ -42,12 +46,12 @@
         <td mat-cell *matCellDef="let product">
           <a mat-button [routerLink]="['/products', product.id]">Детали</a>
           <a mat-button [routerLink]="['/products', product.id, 'edit']">Уреди</a>
-          <button mat-button color="warn" (click)="deleteProduct(product)">Избриши</button>  
+          <button mat-button color="warn" (click)="deleteProduct(product)">Избриши</button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
     @if (products().length === 0) {
