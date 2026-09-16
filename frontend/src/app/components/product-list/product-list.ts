@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { debounceTime, distinctUntilChanged, merge } from 'rxjs';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-product-list',
@@ -29,6 +30,7 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatFormFieldModule,
     MatInputModule,
     MatPaginatorModule,
+    MatSelectModule,
   ],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css',
@@ -41,6 +43,7 @@ export class ProductList implements OnInit {
   totalElements = signal(0);
   pageIndex = signal(0);
   pageSize = signal(10);
+  categories = signal<string[]>([]);
 
   searchControl = new FormControl('');
   categoryControl = new FormControl('');
@@ -55,6 +58,10 @@ export class ProductList implements OnInit {
 
   ngOnInit(): void {
     this.loadProducts();
+
+    this.productService.getCategories().subscribe({
+      next: (categories) => this.categories.set(categories),
+    });
 
     merge(
       this.searchControl.valueChanges,
