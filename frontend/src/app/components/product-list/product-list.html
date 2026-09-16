@@ -1,43 +1,56 @@
 <div class="container">
   <div class="header">
     <h2>Инвентар на производи</h2>
-    <a routerLink="/products/new" class="btn btn-primary">+ Нов производ</a>
+    <a mat-flat-button color="primary" routerLink="/products/new">+ Нов производ</a>
   </div>
 
   @if (isLoading()) {
-    <p class="loading">Се вчитува...</p>
+    <div class="spinner-wrapper">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
   }
 
   @if (errorMessage()) {
-    <p class="alert alert-error">{{ errorMessage() }}</p>
+    <p class="alert-error">{{ errorMessage() }}</p>
   }
 
   @if (!isLoading() && !errorMessage()) {
-    <table class="product-table">
-      <thead>
-        <tr>
-          <th>Име</th>
-          <th>Категорија</th>
-          <th>Цена</th>
-          <th>Количина</th>
-          <th>Акции</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (product of products(); track product.id) {
-          <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.category || '-' }}</td>
-            <td>{{ product.price | number:'1.2-2' }} ден.</td>
-            <td>{{ product.quantityInStock }}</td>
-            <td>
-              <a [routerLink]="['/products', product.id]" class="btn btn-small">Детали</a>
-            </td>
-          </tr>
-        } @empty {
-          <tr><td colspan="5">Нема пронајдени производи.</td></tr>
-        }
-      </tbody>
+    <table mat-table [dataSource]="products()" class="product-table">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Име</th>
+        <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Категорија</th>
+        <td mat-cell *matCellDef="let product">{{ product.category || '-' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Цена</th>
+        <td mat-cell *matCellDef="let product">{{ product.price | number:'1.2-2' }} ден.</td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantityInStock">
+        <th mat-header-cell *matHeaderCellDef>Количина</th>
+        <td mat-cell *matCellDef="let product">{{ product.quantityInStock }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Акции</th>
+        <td mat-cell *matCellDef="let product">
+          <a mat-button [routerLink]="['/products', product.id]">Детали</a>
+          <a mat-button [routerLink]="['/products', product.id, 'edit']">Уреди</a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    @if (products().length === 0) {
+      <p class="empty-state">Нема пронајдени производи.</p>
+    }
   }
 </div>
