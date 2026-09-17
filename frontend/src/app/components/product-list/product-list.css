@@ -58,3 +58,7 @@
 .product-table td.mat-column-actions {
   text-align: center;
 }
+
+.product-table td.mat-column-actions button {
+  color: #d32f2f;
+}
