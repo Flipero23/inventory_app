@@ -29,11 +29,13 @@ mat-form-field {
 
 .image-upload {
   margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
 .file-label {
-  display: block;
-  margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
@@ -41,7 +43,12 @@ mat-form-field {
   max-width: 200px;
   max-height: 200px;
   object-fit: contain;
-  margin-top: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+
+.image-upload .remove-image {
+  --mdc-text-button-label-text-color: #d32f2f;
+  color: #d32f2f;
 }

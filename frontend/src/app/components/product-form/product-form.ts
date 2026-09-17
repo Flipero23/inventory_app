@@ -109,6 +109,23 @@ export class ProductForm implements OnInit {
     reader.readAsDataURL(this.selectedFile);
   }
 
+  removeImage(): void {
+    this.selectedFile = null;
+    this.previewUrl.set(null);
+
+    if (this.isEditMode() && this.productId && this.currentImageUrl()) {
+      this.productService.deleteImage(this.productId).subscribe({
+        next: () => {
+          this.currentImageUrl.set(null);
+          this.snackBar.open('Сликата е избришана.', 'Затвори', { duration: 3000 });
+        },
+        error: () => {
+          this.snackBar.open('Бришењето на сликата не успеа.', 'Затвори', { duration: 5000 });
+        },
+      });
+    }
+  }
+
   cancel(): void {
     this.router.navigate(['/products']);
   }

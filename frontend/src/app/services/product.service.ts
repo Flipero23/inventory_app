@@ -56,4 +56,8 @@ export class ProductService {
   getImageUrl(filename?: string): string | null {
     return filename ? `http://localhost:8080/uploads/${filename}` : null;
   }
+
+  deleteImage(id: number): Observable<Product> {
+    return this.http.delete<Product>(`${this.baseUrl}/${id}/image`);
+  }
 }
