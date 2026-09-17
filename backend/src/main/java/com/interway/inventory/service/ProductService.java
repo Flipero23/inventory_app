@@ -121,4 +121,16 @@ public class ProductService {
         return toResponse(saved);
     }
 
+    public ProductResponse deleteImage(Long id) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        String filename = product.getImageUrl();
+        product.setImageUrl(null);
+        Product saved = repository.save(product);
+        fileStorageService.delete(filename);
+
+        return toResponse(saved);
+    }
+
 }

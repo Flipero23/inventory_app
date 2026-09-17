@@ -63,7 +63,12 @@ public class ProductController {
 
     @PostMapping("/{id}/image")
     public ProductResponse uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file){
-        return service.uploadImage(id, file)
-;    }
+        return service.uploadImage(id, file);
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ProductResponse deleteImage(@PathVariable Long id) {
+        return service.deleteImage(id);
+    }
 
 }
