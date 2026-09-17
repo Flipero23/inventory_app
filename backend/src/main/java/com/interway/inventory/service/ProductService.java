@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.math.BigDecimal;
@@ -20,9 +21,11 @@ import java.util.List;
 @Transactional
 public class ProductService {
     private final ProductRepository repository;
+    private final FileStorageService fileStorageService;
 
-    public ProductService(ProductRepository repository) {
+    public ProductService(ProductRepository repository, FileStorageService fileStorageService) {
         this.repository = repository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional(readOnly = true)
@@ -65,11 +68,12 @@ public class ProductService {
         return toResponse(repository.save(product));
     }
 
-    public void delete(Long id){
-        if(!repository.existsById(id)){
-            throw new ProductNotFoundException(id);
-        }
+    public void delete(Long id) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+        String image = product.getImageUrl();
         repository.deleteById(id);
+        fileStorageService.delete(image);
     }
 
     private void applyRequest(Product product, ProductRequest request) {
@@ -78,7 +82,6 @@ public class ProductService {
         product.setPrice(request.getPrice());
         product.setQuantityInStock(request.getQuantityInStock());
         product.setCategory(normalize(request.getCategory()));
-        product.setImageUrl(normalize(request.getImageUrl()));
     }
 
     private String normalize(String value) {
@@ -102,6 +105,20 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<String> findAllCategories(){
         return repository.findDistinctCategories();
+    }
+
+    public ProductResponse uploadImage(Long id, MultipartFile file) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        String oldImage = product.getImageUrl();
+        String filename = fileStorageService.store(file);
+        product.setImageUrl(filename);
+
+        Product saved = repository.save(product);
+        fileStorageService.delete(oldImage);
+
+        return toResponse(saved);
     }
 
 }

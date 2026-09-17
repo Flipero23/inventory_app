@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -59,5 +60,10 @@ public class ProductController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/image")
+    public ProductResponse uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file){
+        return service.uploadImage(id, file)
+;    }
 
 }
