@@ -155,7 +155,7 @@ GET /products?search=лаптоп&category=Електроника&minPrice=1000&
 | `description` | String | Опционално, макс. 1000 знаци |
 | `price` | BigDecimal | Задолжително, ≥ 0 |
 | `quantityInStock` | Integer | Задолжително, ≥ 0 |
-| `category` | String | Опционално |
+| `category` | String | Опционално, макс. 100 знаци |
 | `imageUrl` | String | Се поставува само преку endpoint-от за слики |
 | `createdAt` | Instant | Автоматски |
 | `updatedAt` | Instant | Автоматски |
