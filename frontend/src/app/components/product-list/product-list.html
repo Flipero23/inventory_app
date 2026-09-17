@@ -10,7 +10,7 @@
       <input matInput [formControl]="searchControl" />
     </mat-form-field>
 
-        <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline">
       <mat-label>Категорија</mat-label>
       <mat-select [formControl]="categoryControl">
         <mat-option value="">Сите</mat-option>
@@ -43,6 +43,21 @@
 
   @if (!isLoading() && !errorMessage()) {
     <table mat-table [dataSource]="products()" class="product-table">
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let product">
+          @if (product.imageUrl) {
+            <img
+              [src]="productService.getImageUrl(product.imageUrl)"
+              [alt]="product.name"
+              class="thumbnail"
+            />
+          } @else {
+            <div class="thumbnail thumbnail-empty">—</div>
+          }
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Име</th>
         <td mat-cell *matCellDef="let product">{{ product.name }}</td>

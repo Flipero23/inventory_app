@@ -5,7 +5,8 @@ import { Product, Page } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private readonly baseUrl = 'http://localhost:8080/products';
+  private readonly apiUrl = 'http://localhost:8080';
+  private readonly baseUrl = `${this.apiUrl}/products`;
 
   constructor(private http: HttpClient) {}
 
@@ -54,7 +55,7 @@ export class ProductService {
   }
 
   getImageUrl(filename?: string): string | null {
-    return filename ? `http://localhost:8080/uploads/${filename}` : null;
+    return filename ? `${this.apiUrl}/uploads/${filename}` : null;
   }
 
   deleteImage(id: number): Observable<Product> {

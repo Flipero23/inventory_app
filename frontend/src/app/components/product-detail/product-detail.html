@@ -12,7 +12,7 @@
   @if (product(); as p) {
     <mat-card>
       @if (p.imageUrl) {
-        <img [src]="'http://localhost:8080/uploads/' + p.imageUrl" alt="{{ p.name }}" class="product-image" />
+        <img [src]="productService.getImageUrl(p.imageUrl)" alt="{{ p.name }}" class="product-image" />
       }
       <mat-card-header>
         <mat-card-title>{{ p.name }}</mat-card-title>

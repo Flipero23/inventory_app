@@ -62,3 +62,25 @@
 .product-table td.mat-column-actions button {
   color: #d32f2f;
 }
+
+.thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.thumbnail-empty {
+  background: #f0f0f0;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.mat-column-image {
+  width: 64px;
+  padding-right: 0;
+}

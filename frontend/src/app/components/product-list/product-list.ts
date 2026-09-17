@@ -39,7 +39,7 @@ export class ProductList implements OnInit {
   products = signal<Product[]>([]);
   isLoading = signal(false);
   errorMessage = signal('');
-  displayedColumns: string[] = ['name', 'category', 'price', 'quantityInStock', 'actions'];
+  displayedColumns: string[] = ['image', 'name', 'category', 'price', 'quantityInStock', 'actions'];
   totalElements = signal(0);
   pageIndex = signal(0);
   pageSize = signal(10);
@@ -51,7 +51,7 @@ export class ProductList implements OnInit {
   maxPriceControl = new FormControl<number | null>(null);
 
   constructor(
-    private productService: ProductService,
+    public productService: ProductService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
   ) {}

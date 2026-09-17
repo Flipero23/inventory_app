@@ -50,7 +50,7 @@ export class ProductForm implements OnInit {
         next: (product) => {
           this.form.patchValue(product);
           if (product.imageUrl) {
-            this.currentImageUrl.set('http://localhost:8080/uploads/' + product.imageUrl);
+            this.currentImageUrl.set(this.productService.getImageUrl(product.imageUrl));
           }
         },
         error: () => this.errorMessage.set('Неуспешно вчитан производ.'),

@@ -20,7 +20,7 @@ export class ProductDetail implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    public productService: ProductService
   ) {}
 
   ngOnInit(): void {
