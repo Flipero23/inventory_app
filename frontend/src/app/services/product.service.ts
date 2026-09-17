@@ -46,4 +46,14 @@ export class ProductService {
   getCategories(): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/categories`);
   }
+
+  uploadImage(id: number, file: File): Observable<Product> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<Product>(`${this.baseUrl}/${id}/image`, formData);
+  }
+
+  getImageUrl(filename?: string): string | null {
+    return filename ? `http://localhost:8080/uploads/${filename}` : null;
+  }
 }

@@ -6,7 +6,6 @@
   }
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-
     <mat-form-field appearance="outline">
       <mat-label>Име</mat-label>
       <input matInput formControlName="name" />
@@ -52,6 +51,17 @@
       <mat-label>Категорија</mat-label>
       <input matInput formControlName="category" />
     </mat-form-field>
+
+    <div class="image-upload">
+      <label for="fileInput" class="file-label">Слика на производот</label>
+      <input id="fileInput" type="file" accept="image/*" (change)="onFileSelected($event)" />
+
+      @if (previewUrl()) {
+        <img [src]="previewUrl()" alt="Преглед" class="image-preview" />
+      } @else if (currentImageUrl()) {
+        <img [src]="currentImageUrl()" alt="Тековна слика" class="image-preview" />
+      }
+    </div>
 
     <div class="form-actions">
       <button mat-flat-button color="primary" type="submit" [disabled]="isSaving()">
