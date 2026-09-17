@@ -44,3 +44,17 @@
   flex: 1;
   min-width: 180px;
 }
+
+.product-table th.mat-column-price{
+  text-align: left;
+}
+
+.product-table th.mat-column-actions,
+.product-table th.mat-column-quantityInStock {
+  text-align: center;
+}
+
+.product-table td.mat-column-quantityInStock,
+.product-table td.mat-column-actions {
+  text-align: center;
+}
