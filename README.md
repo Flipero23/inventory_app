@@ -108,7 +108,7 @@ npm start
 Апликацијата е достапна на **http://localhost:4200**
 
 > Backend-от мора да работи пред стартување на frontend-от.
-> Ако backend-от работи на друг порт, изменете го `baseUrl` во `frontend/src/app/services/product.service.ts`.
+> Ако backend-от работи на друг порт, изменете го `apiUrl` во `frontend/src/app/services/product.service.ts`.
 
 ---
 
@@ -123,6 +123,7 @@ npm start
 | DELETE | `/products/{id}` | Бришење производ |
 | GET | `/products/categories` | Листа на постоечки категории |
 | POST | `/products/{id}/image` | Прикачување слика |
+| DELETE | `/products/{id}/image` | Бришење слика |
 
 ### Параметри за `GET /products`
 
@@ -176,7 +177,7 @@ GET /products?search=лаптоп&category=Електроника&minPrice=1000&
 
 - Пребарување по име, филтер по категорија и по ценовен опсег
 - Пагинација на ниво на база
-- Прикачување слики за производи
+- Прикачување и бришење слики за производи
 
 ---
 
